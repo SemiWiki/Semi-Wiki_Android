@@ -9,9 +9,17 @@
     <include
         android:id="@+id/include_search_bar"
         layout="@layout/common_search_bar"
+<<<<<<< HEAD
+<<<<<<< HEAD
+        android:visibility="visible"
+=======
+>>>>>>> origin/main
+=======
+        android:visibility="visible"
+>>>>>>> origin/feat/65-search-icon-function
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_search_results"
@@ -33,4 +41,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

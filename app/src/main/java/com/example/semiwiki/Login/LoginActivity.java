@@ -25,7 +25,6 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // 자동 로그인
         String existingToken = getSharedPreferences(PREF, MODE_PRIVATE).getString(KEY_AT, null);
         if (existingToken != null && !existingToken.isEmpty()) {
             RetrofitInstance.setAccessToken(existingToken);

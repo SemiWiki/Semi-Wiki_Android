@@ -12,26 +12,45 @@
         android:id="@+id/tv_no_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="겸색 결과가 없습니다."
+        android:text="검색 결과가 없습니다."
         android:textStyle="bold"
         android:textColor="#000000"
+<<<<<<< HEAD
+<<<<<<< HEAD
+        android:textSize="24sp"
+=======
         android:textSize="28sp"
+>>>>>>> origin/main
+=======
+        android:textSize="24sp"
+>>>>>>> origin/feat/65-search-icon-function
         android:includeFontPadding="false"/>
 
     <TextView
         android:id="@+id/tv_search_other"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+<<<<<<< HEAD
+<<<<<<< HEAD
+        android:text="다른 검색어를 시도해 주세요."
+        android:textSize="16sp"
+=======
         android:text="다른 검색어를 시도해주세요."
         android:textSize="20sp"
+>>>>>>> origin/main
+=======
+        android:text="다른 검색어를 시도해 주세요."
+        android:textSize="16sp"
+>>>>>>> origin/feat/65-search-icon-function
         android:textColor="#FF9E3D"
-        android:layout_marginBottom="120dp"/>
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="48dp"
+        android:includeFontPadding="false"/>
 
     <ImageView
         android:id="@+id/iv_logo"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:src="@drawable/search_logo"
-        android:paddingBottom="80dp"/>
-
+        android:contentDescription="@string/app_name"/>
 </LinearLayout>

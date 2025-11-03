@@ -4,20 +4,20 @@
     android:layout_height="40dp"
     android:orientation="horizontal"
     android:padding="8dp"
+    android:gravity="center_vertical"
     android:background="@drawable/bg_search_pill">
 
     <ImageView
         android:id="@+id/iv_search"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_gravity="center_vertical"
-        android:src="@drawable/outline_search_24"
-        android:layout_marginStart="10dp"/>
+        android:layout_marginStart="10dp"
+        android:src="@drawable/outline_search_24"/>
 
     <EditText
         android:id="@+id/et_keyword"
         android:layout_width="0dp"
-        android:layout_height="24dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
@@ -26,13 +26,15 @@
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:singleLine="true"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:textColorHint="#999999"/>
 
     <ImageView
         android:id="@+id/iv_clear"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp"
         android:src="@drawable/outline_close_24"
-        android:layout_marginEnd="8dp"/>
+        android:visibility="gone"/>
 </LinearLayout>

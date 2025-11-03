@@ -73,7 +73,6 @@
         android:textSize="18sp"
         android:textStyle="bold"/>
 
-    <!-- 비밀번호 입력 -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/login_input_layout_pw"
         android:layout_width="match_parent"

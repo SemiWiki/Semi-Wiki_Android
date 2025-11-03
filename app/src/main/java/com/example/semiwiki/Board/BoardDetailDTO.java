@@ -2,9 +2,6 @@ package com.example.semiwiki.Board;
 
 import java.util.List;
 
-/**
- * 게시글 상세 응답 DTO
- */
 public class BoardDetailDTO {
 
     private String title;

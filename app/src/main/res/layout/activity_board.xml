@@ -51,6 +51,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <include
+                android:id="@+id/include_search_bar_top"
+                layout="@layout/common_search_bar"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
@@ -153,6 +162,18 @@
                     android:paddingBottom="8dp"/>
             </LinearLayout>
         </LinearLayout>
+
+        <include
+            android:id="@+id/view_empty"
+            layout="@layout/view_search_empty"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="32dp"
+            android:paddingBottom="32dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            tools:visibility="gone"/>
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView

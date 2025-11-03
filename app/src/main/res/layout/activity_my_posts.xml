@@ -53,6 +53,14 @@
                 app:layout_constraintBottom_toBottomOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+
+=======
+>>>>>>> origin/main
+=======
+
+>>>>>>> origin/feat/65-search-icon-function
         <TextView
             android:id="@+id/tv_board_text"
             android:layout_width="wrap_content"
@@ -100,7 +108,6 @@
                 android:padding="16dp"
                 android:orientation="vertical">
 
-                <!-- 헤더 행 -->
                 <LinearLayout
                     android:id="@+id/board_header"
                     android:layout_width="match_parent"

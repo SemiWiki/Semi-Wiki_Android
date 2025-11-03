@@ -3,8 +3,12 @@ package com.example.semiwiki.Board;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,16 +16,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.semiwiki.Login.RetrofitInstance;
-import com.example.semiwiki.Login.AuthService;
 import com.example.semiwiki.Drawer.MyLikesActivity;
+import com.example.semiwiki.Drawer.MyPageDTO;
 import com.example.semiwiki.Drawer.MyPostsActivity;
+import com.example.semiwiki.Drawer.UserService;
+import com.example.semiwiki.Login.AuthService;
 import com.example.semiwiki.Login.LoginActivity;
+import com.example.semiwiki.Login.RetrofitInstance;
 import com.example.semiwiki.R;
 import com.example.semiwiki.databinding.ActivityBoardBinding;
-
-import com.example.semiwiki.Drawer.UserService;
-import com.example.semiwiki.Drawer.MyPageDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,17 @@ public class BoardActivity extends AppCompatActivity {
     private static final String PREF = "semiwiki_prefs";
     private static final String KEY_AT = "access_token";
     private static final String KEY_ID = "account_id";
+
+    private View searchBarContainer;
+    private EditText etKeyword;
+    private ImageView ivClear;
+
+    private View emptyView;
+    private View listCardContainer;
+    private View boardTitleView;
+    private View tabGroupView;
+
+    private String currentOrderBy = "recent";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +74,6 @@ public class BoardActivity extends AppCompatActivity {
 
         setupUserDrawerHeader();
 
-
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new BoardAdapter(new ArrayList<>());
         binding.recyclerView.setAdapter(adapter);
@@ -75,7 +88,79 @@ public class BoardActivity extends AppCompatActivity {
         });
 
         setupTabs();
-        loadBoardListFromApi(); // 기본: 최신순
+
+        searchBarContainer = findViewById(R.id.include_search_bar_top);
+        emptyView = findViewById(R.id.view_empty);
+        listCardContainer = findViewById(R.id.layout_list_card);
+        boardTitleView = findViewById(R.id.tv_board_text);
+        tabGroupView = findViewById(R.id.tab_group);
+
+        etKeyword = searchBarContainer.findViewById(R.id.et_keyword);
+        ivClear = searchBarContainer.findViewById(R.id.iv_clear);
+
+        ImageView ivMenu = binding.ivMenu;
+        ImageView ivLogo = binding.ivLogo;
+        ImageView ivSearch = binding.ivSearch;
+
+        searchBarContainer.setVisibility(View.GONE);
+        if (emptyView != null) emptyView.setVisibility(View.GONE);
+
+        ivSearch.setOnClickListener(v -> {
+            ivMenu.setVisibility(View.GONE);
+            ivLogo.setVisibility(View.GONE);
+            ivSearch.setVisibility(View.GONE);
+
+            searchBarContainer.setVisibility(View.VISIBLE);
+            etKeyword.requestFocus();
+        });
+
+        ivClear.setOnClickListener(v -> {
+            etKeyword.setText("");
+
+            searchBarContainer.setVisibility(View.GONE);
+            ivMenu.setVisibility(View.VISIBLE);
+            ivLogo.setVisibility(View.VISIBLE);
+            ivSearch.setVisibility(View.VISIBLE);
+
+            currentOrderBy = binding.tabNewest.isSelected() ? "recent" : "like";
+            loadBoardListFromApi(currentOrderBy);
+
+            if (listCardContainer != null) listCardContainer.setVisibility(View.VISIBLE);
+            if (boardTitleView != null) boardTitleView.setVisibility(View.VISIBLE);
+            if (tabGroupView != null) tabGroupView.setVisibility(View.VISIBLE);
+            if (emptyView != null) emptyView.setVisibility(View.GONE);
+            binding.recyclerView.setVisibility(View.VISIBLE);
+        });
+
+        etKeyword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String keyword = s.toString().trim();
+
+                if (keyword.isEmpty()) {
+                    currentOrderBy = binding.tabNewest.isSelected() ? "recent" : "like";
+                    loadBoardListFromApi(currentOrderBy);
+
+                    if (listCardContainer != null) listCardContainer.setVisibility(View.VISIBLE);
+                    if (boardTitleView != null) boardTitleView.setVisibility(View.VISIBLE);
+                    if (tabGroupView != null) tabGroupView.setVisibility(View.VISIBLE);
+                    if (emptyView != null) emptyView.setVisibility(View.GONE);
+
+                    binding.recyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    searchBoardFromApi(keyword, currentOrderBy);
+                }
+                ivClear.setVisibility(keyword.isEmpty() ? View.GONE : View.VISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        loadBoardListFromApi(currentOrderBy);
     }
 
     @Override
@@ -184,7 +269,6 @@ public class BoardActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    /** 정렬 탭 */
     private void setupTabs() {
         View.OnClickListener tabClick = v -> {
             binding.tabNewest.setSelected(false);
@@ -192,9 +276,15 @@ public class BoardActivity extends AppCompatActivity {
             v.setSelected(true);
 
             if (v.getId() == R.id.tab_newest) {
-                loadBoardListFromApi("recent");
+                currentOrderBy = "recent";
             } else {
-                loadBoardListFromApi("like");
+                currentOrderBy = "like";
+            }
+
+            if (etKeyword != null && etKeyword.getText() != null && etKeyword.getText().length() > 0) {
+                searchBoardFromApi(etKeyword.getText().toString().trim(), currentOrderBy);
+            } else {
+                loadBoardListFromApi(currentOrderBy);
             }
         };
 
@@ -203,7 +293,6 @@ public class BoardActivity extends AppCompatActivity {
         binding.tabNewest.setSelected(true);
     }
 
-    /** 서버에서 게시글 목록 불러오기 */
     private void loadBoardListFromApi() { loadBoardListFromApi("recent"); }
 
     private void loadBoardListFromApi(String orderBy) {
@@ -228,11 +317,16 @@ public class BoardActivity extends AppCompatActivity {
             public void onResponse(Call<List<BoardListItemDTO>> call,
                                    Response<List<BoardListItemDTO>> response) {
                 if (response.code() == 401 || response.code() == 403) { handleAuthError(); return; }
-                if (response.code() == 204) { adapter.submitList(new ArrayList<>()); return; }
+                if (response.code() == 204) {
+                    adapter.submitList(new ArrayList<>());
+                    return;
+                }
 
                 if (response.isSuccessful() && response.body() != null) {
                     List<BoardItem> uiList = BoardMappers.toBoardItems(response.body());
                     adapter.submitList(uiList);
+
+                    showListState(uiList);
                 } else {
                     Log.e("BoardActivity", "목록 불러오기 실패: " + response.code());
                 }
@@ -243,6 +337,72 @@ public class BoardActivity extends AppCompatActivity {
                 Log.e("BoardActivity", "네트워크 에러: " + t.getMessage(), t);
             }
         });
+    }
+
+    private void searchBoardFromApi(String keyword, String orderBy) {
+        Retrofit retrofit = RetrofitInstance.getRetrofitInstance();
+        BoardService service = retrofit.create(BoardService.class);
+
+        SharedPreferences pref = getSharedPreferences(PREF, MODE_PRIVATE);
+        String token = pref.getString(KEY_AT, null);
+        if (token == null || token.isEmpty()) {
+            handleAuthError();
+            return;
+        }
+
+        service.getBoardList(
+                "Bearer " + token,
+                keyword,
+                null,
+                orderBy,
+                0,
+                20
+        ).enqueue(new Callback<List<BoardListItemDTO>>() {
+            @Override
+            public void onResponse(Call<List<BoardListItemDTO>> call, Response<List<BoardListItemDTO>> response) {
+                if (response.code() == 401 || response.code() == 403) { handleAuthError(); return; }
+
+                if (response.isSuccessful() && response.body() != null) {
+                    List<BoardListItemDTO> body = response.body();
+                    if (body.isEmpty()) {
+                        showEmptyState();
+                    } else {
+                        List<BoardItem> uiList = BoardMappers.toBoardItems(body);
+                        showListState(uiList);
+                    }
+                } else {
+                    showEmptyState();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<BoardListItemDTO>> call, Throwable t) {
+                Log.e("BoardActivity", "검색 실패: " + t.getMessage());
+                showEmptyState();
+            }
+        });
+    }
+
+    private void showEmptyState() {
+        if (boardTitleView != null) boardTitleView.setVisibility(View.GONE);
+        if (tabGroupView != null) tabGroupView.setVisibility(View.GONE);
+        if (listCardContainer != null) listCardContainer.setVisibility(View.GONE);
+        binding.recyclerView.setVisibility(View.GONE);
+
+        if (emptyView != null) emptyView.setVisibility(View.VISIBLE);
+
+        adapter.submitList(new ArrayList<>());
+    }
+
+    private void showListState(List<BoardItem> uiList) {
+        if (boardTitleView != null) boardTitleView.setVisibility(View.VISIBLE);
+        if (tabGroupView != null) tabGroupView.setVisibility(View.VISIBLE);
+        if (listCardContainer != null) listCardContainer.setVisibility(View.VISIBLE);
+
+        if (emptyView != null)emptyView.setVisibility(View.GONE);
+
+        binding.recyclerView.setVisibility(View.VISIBLE);
+        adapter.submitList(uiList);
     }
 
     private void handleAuthError() {
