@@ -38,17 +38,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
     private TextView tvCat1, tvCat2, tvCat3;
     private LinearLayout catWrap, tocContainer, contentContainer;
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-    private ImageView ivLogo, ivMenu;
-=======
     private ImageView ivLogo, ivMenu, ivSearch;
->>>>>>> origin/main
-=======
-
-    private ImageView ivLogo, ivMenu;
->>>>>>> origin/feat/65-search-icon-function
     private DrawerLayout drawerLayout;
 
     private long boardId;

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BoardSearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity {
 
     private EditText etKeyword;
     private ImageView ivClear;

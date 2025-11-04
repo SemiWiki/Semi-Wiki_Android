@@ -61,8 +61,6 @@ public class MyLikesActivity extends AppCompatActivity {
             });
         }
 
-
-        // 햄버거 → 드로어
         binding.ivMenu.setOnClickListener(v ->
                 binding.drawerLayout.openDrawer(GravityCompat.START)
         );

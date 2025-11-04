@@ -52,16 +52,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/main
-=======
-
->>>>>>> origin/feat/65-search-icon-function
-        <TextView
+ <TextView
             android:id="@+id/tv_board_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -103,7 +94,7 @@
             <LinearLayout
                 android:id="@+id/linear_layout_card"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="580dp"
                 android:background="@drawable/bg_board_card"
                 android:padding="16dp"
                 android:orientation="vertical">

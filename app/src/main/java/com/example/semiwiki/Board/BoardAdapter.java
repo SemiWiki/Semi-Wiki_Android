@@ -57,17 +57,14 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.VH> {
     public void onBindViewHolder(@NonNull VH h, int position) {
         BoardItem item = items.get(position);
 
-        // 제목
         h.tvTitle.setText(nullToEmpty(item.getTitle()));
         h.tvTitle.setMaxLines(1);
         h.tvTitle.setEllipsize(TextUtils.TruncateAt.END);
 
-        // 수정자
         h.tvEditor.setText(nullToEmpty(item.getEditor()));
         h.tvEditor.setMaxLines(1);
         h.tvEditor.setEllipsize(TextUtils.TruncateAt.END);
 
-        // 카테고리
         h.layoutChips.removeAllViews();
         List<String> cats = item.getCategories();
         if (cats != null && !cats.isEmpty()) {
