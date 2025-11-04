@@ -104,7 +104,7 @@
             <LinearLayout
                 android:id="@+id/linear_layout_card"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="580dp"
                 android:background="@drawable/bg_board_card"
                 android:padding="16dp"
                 android:orientation="vertical">

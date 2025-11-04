@@ -15,28 +15,12 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
-        <FrameLayout
-            android:id="@+id/framelayout_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
         <ImageView
             android:id="@+id/iv_avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:contentDescription="@null"
             android:src="@drawable/ic_account_circle_outline"/>
-
-            <ImageView
-                android:id="@+id/iv_edit_image"
-                android:layout_width="wrap_content"
-                android:layout_height="18dp"
-                android:layout_marginStart="22dp"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/mypage_camera"/>
-        </FrameLayout>
-
-
         <LinearLayout
             android:id="@+id/layout_id_count"
             android:layout_width="0dp"

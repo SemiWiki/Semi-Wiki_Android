@@ -29,7 +29,8 @@
         <activity
             android:name=".Login.LoginActivity"
             android:exported="false"
-            android:noHistory="true"/>
+            android:noHistory="true"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
 
         <activity
             android:name=".MainActivity"
@@ -42,6 +43,9 @@
 
         <activity
             android:name=".Board.PostDetailActivity"
+            android:exported="false"/>
+
+        <activity android:name=".Search.SearchActivity"
             android:exported="false"/>
 
         <activity android:name=".Drawer.MyPostsActivity" android:exported="false"/>

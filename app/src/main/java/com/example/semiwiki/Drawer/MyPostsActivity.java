@@ -63,7 +63,6 @@ public class MyPostsActivity extends AppCompatActivity {
             });
         }
 
-        // 햄버거 → 드로어
         binding.ivMenu.setOnClickListener(v ->
                 binding.drawerLayout.openDrawer(GravityCompat.START)
         );
@@ -83,10 +82,8 @@ public class MyPostsActivity extends AppCompatActivity {
             startActivity(i);
         });
 
-        // 탭(최신/추천)
         setupTabs();
 
-        // 기본: 최신순
         binding.tabNewest.setSelected(true);
         loadUserPosts("recent");
     }
@@ -193,8 +190,6 @@ public class MyPostsActivity extends AppCompatActivity {
                     }
                 });
     }
-
-    /** 유저가 쓴 글 목록  */
     private void loadUserPosts(String orderBy) {
         SharedPreferences prefs = getSharedPreferences("semiwiki_prefs", MODE_PRIVATE);
         String token     = prefs.getString("access_token", null);

@@ -3,9 +3,13 @@ package com.example.semiwiki.Login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+
 import com.example.semiwiki.Board.BoardActivity;
 import com.example.semiwiki.databinding.ActivityLoginBinding;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -19,11 +23,15 @@ public class LoginActivity extends AppCompatActivity {
     private static final String KEY_RT = "refresh_token";
     private static final String KEY_ACC_ID = "account_id";
 
+    private boolean isLoggingIn = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        binding.loginButton.bringToFront();
 
         String existingToken = getSharedPreferences(PREF, MODE_PRIVATE).getString(KEY_AT, null);
         if (existingToken != null && !existingToken.isEmpty()) {
@@ -32,7 +40,12 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        ViewCompat.setElevation(binding.loginButton, 8f);
+        binding.loginButton.bringToFront();
+        binding.loginButton.setClickable(true);
+
         binding.loginButton.setOnClickListener(v -> {
+            if (isLoggingIn) return;
             String id = binding.loginInputId.getText().toString().trim();
             String pw = binding.loginInputPw.getText().toString().trim();
             if (id.isEmpty()) { binding.loginInputId.setError("아이디를 입력해주세요"); return; }
@@ -49,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(String id, String pw) {
+        isLoggingIn = true;
         binding.loginButton.setEnabled(false);
 
         LoginRequest request = new LoginRequest(id, pw);
@@ -58,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                isLoggingIn = false;
                 binding.loginButton.setEnabled(true);
 
                 if (response.isSuccessful() && response.body() != null) {
@@ -82,7 +97,6 @@ public class LoginActivity extends AppCompatActivity {
                             .apply();
 
                     RetrofitInstance.setAccessToken(accessToken);
-
                     Toast.makeText(LoginActivity.this, "로그인 성공!", Toast.LENGTH_SHORT).show();
                     moveToBoard();
                 } else {
@@ -98,6 +112,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
+                isLoggingIn = false;
                 binding.loginButton.setEnabled(true);
                 Toast.makeText(LoginActivity.this, "네트워크 오류: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
