@@ -76,7 +76,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="580dp"
+                android:layout_height="600dp"
                 android:background="@drawable/bg_board_card"
                 android:padding="16dp"
                 android:orientation="vertical">
