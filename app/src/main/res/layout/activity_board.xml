@@ -93,8 +93,8 @@
                 android:text="추천순"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/layout_list_card"
+        <FrameLayout
+            android:id="@+id/contentFrame"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -161,19 +161,13 @@
                     android:paddingTop="0dp"
                     android:paddingBottom="8dp"/>
             </LinearLayout>
-        </LinearLayout>
-
-        <include
-            android:id="@+id/view_empty"
-            layout="@layout/view_search_empty"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="32dp"
-            android:paddingBottom="32dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            tools:visibility="gone"/>
+            <include
+                android:id="@+id/view_empty"
+                layout="@layout/view_search_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+        </FrameLayout>
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
