@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Semiwiki</string>
+    <string name="post_category">카테고리</string>
 </resources>
