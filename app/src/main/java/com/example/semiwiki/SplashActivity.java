@@ -32,6 +32,6 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             finish();
-        }, 800); // 0.8초 후 이동
+        }, 800);
     }
 }
