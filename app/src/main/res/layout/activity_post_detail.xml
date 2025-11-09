@@ -61,113 +61,140 @@
             android:paddingEnd="20dp"
             android:paddingBottom="32dp">
 
-            <RelativeLayout
-                android:id="@+id/relative_layout_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/tv_post_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="백엔드"
-                    android:textColor="#252525"
-                    android:textSize="24sp"
-                    android:textStyle="bold"/>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/tv_post_title"
-                    android:layout_alignParentEnd="true"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:id="@+id/iv_likes"
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:src="@drawable/ic_likes"
-                        app:tint="#252525"/>
-
-                    <TextView
-                        android:id="@+id/tv_likes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
-                        android:text="1,293"
-                        android:textColor="#252525"
-                        android:textSize="12sp"
-                        android:textStyle="bold"/>
-                </LinearLayout>
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_layout_category"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_category"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="카테고리"
-                    android:textColor="#252525"
-                    android:textSize="18sp"
-                    android:textStyle="bold"/>
+                android:layout_gravity="center"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="4dp"
+                android:padding="16dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
-                    android:id="@+id/linear_layout_category_three"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:orientation="horizontal">
+                    android:id="@+id/linear_layout_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="76dp"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tv_category_01"
-                        android:layout_width="wrap_content"
-                        android:layout_height="24dp"
-                        android:layout_marginEnd="2dp"
-                        android:background="@drawable/bg_chip"
-                        android:gravity="center"
-                        android:minHeight="20dp"
-                        android:paddingStart="4dp"
-                        android:paddingEnd="4dp"
-                        android:text="전공"
-                        android:textColor="#252525"
-                        android:textSize="12sp"/>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/tv_category_02"
-                        android:layout_width="wrap_content"
-                        android:layout_height="24dp"
-                        android:layout_marginEnd="2dp"
-                        android:background="@drawable/bg_chip"
-                        android:gravity="center"
-                        android:minHeight="24dp"
-                        android:paddingStart="4dp"
-                        android:paddingEnd="4dp"
-                        android:text="기숙사"
-                        android:textColor="#252525"
-                        android:textSize="12sp"/>
+                        <TextView
+                            android:id="@+id/tv_post_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="백엔드"
+                            android:textColor="#252525"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/group_like"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constrainedWidth="true"/>
 
-                    <TextView
-                        android:id="@+id/tv_category_03"
-                        android:layout_width="wrap_content"
-                        android:layout_height="24dp"
-                        android:background="@drawable/bg_chip"
-                        android:gravity="center"
-                        android:minHeight="24dp"
-                        android:paddingStart="4dp"
-                        android:paddingEnd="4dp"
-                        android:text="논란"
-                        android:textColor="#252525"
-                        android:textSize="12sp"/>
+                        <LinearLayout
+                            android:id="@+id/group_like"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tv_post_title"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_post_title">
+
+                            <ImageView
+                                android:id="@+id/iv_likes"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/ic_likes"
+                                app:tint="#252525"/>
+
+                            <TextView
+                                android:id="@+id/tv_likes"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:text="1,293  "
+                                android:textColor="#252525"
+                                android:textSize="12sp"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linear_layout_category_three"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_category"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/post_category"
+                            android:textColor="#252525"
+                            android:textSize="18sp"
+                            android:textStyle="bold"/>
+
+                        <LinearLayout
+                            android:id="@+id/linear_layout_category"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_category_01"
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="@drawable/bg_chip"
+                                android:gravity="center"
+                                android:minHeight="24dp"
+                                android:paddingStart="1dp"
+                                android:paddingEnd="1dp"
+                                android:text="전공"
+                                android:textColor="#252525"
+                                android:textSize="12sp"/>
+
+                            <TextView
+                                android:id="@+id/tv_category_02"
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="@drawable/bg_chip"
+                                android:gravity="center"
+                                android:minHeight="24dp"
+                                android:paddingStart="1dp"
+                                android:paddingEnd="1dp"
+                                android:text="기숙사"
+                                android:textColor="#252525"
+                                android:textSize="12sp"/>
+
+                            <TextView
+                                android:id="@+id/tv_category_03"
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:background="@drawable/bg_chip"
+                                android:gravity="center"
+                                android:minHeight="24dp"
+                                android:paddingStart="1dp"
+                                android:paddingEnd="1dp"
+                                android:text="논란"
+                                android:textColor="#252525"
+                                android:textSize="12sp"/>
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/material_cv"
@@ -226,7 +253,7 @@
                             android:textSize="14sp"/>
 
                         <TextView
-                            android:id="@+id/tv_toc_2.1"
+                            android:id="@+id/tv_toc_2_1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="1dp"
@@ -254,7 +281,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
             <LinearLayout
                 android:id="@+id/linear_layout_post_card"
                 android:layout_width="match_parent"

@@ -15,6 +15,8 @@ import com.example.semiwiki.R;
 
 public class SplashActivity extends AppCompatActivity {
 
+    private static final long SPLASH_DELAY = 800;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +34,6 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             finish();
-        }, 800); // 0.8초 후 이동
+        }, SPLASH_DELAY);
     }
 }
