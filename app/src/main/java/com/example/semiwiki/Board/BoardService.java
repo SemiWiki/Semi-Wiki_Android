@@ -18,6 +18,7 @@ public interface BoardService {
             @Query("offset") Integer offset,
             @Query("limit") Integer limit
     );
+
     @GET("notice-board/{id}")
     Call<BoardDetailDTO> getBoardDetail(
             @Header("Authorization") String bearerToken,

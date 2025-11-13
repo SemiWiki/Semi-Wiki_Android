@@ -21,9 +21,6 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-        setContentView(R.layout.activity_main);
-
-        // TODO: 메인 화면 초기화 작업 여기서 진행
     }
 
     @Nullable

@@ -168,7 +168,6 @@ public class MyLikesActivity extends AppCompatActivity {
                 });
     }
 
-    /** 내가 좋아요한 글: 서버가 '최근 좋아요 순'으로 정렬하여 반환 */
     private void loadMyLikedPosts() {
         SharedPreferences prefs = getSharedPreferences("semiwiki_prefs", MODE_PRIVATE);
         String token     = prefs.getString("access_token", null);
