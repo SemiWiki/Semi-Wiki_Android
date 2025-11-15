@@ -22,7 +22,7 @@ public interface UserService {
     Call<List<BoardListItemDTO>> getUserPosts(
             @Header("Authorization") String bearerToken,
             @Path("accountId") String accountId,
-            @Query("orderBy") String orderBy,   // "recent" | "like"
+            @Query("orderBy") String orderBy,
             @Query("offset") Integer offset,
             @Query("limit") Integer limit
     );

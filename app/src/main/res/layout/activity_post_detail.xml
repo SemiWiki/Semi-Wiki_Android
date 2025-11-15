@@ -78,7 +78,8 @@
                     android:id="@+id/linear_layout_header"
                     android:layout_width="match_parent"
                     android:layout_height="76dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginStart="10dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/cl_title"
@@ -120,10 +121,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="6dp"
-                                android:text="1,293  "
+                                android:text="1,293"
                                 android:textColor="#252525"
                                 android:textSize="12sp"
-                                android:textStyle="bold"/>
+                                android:textStyle="bold"
+                                android:layout_marginEnd="8dp"/>
                         </LinearLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -131,7 +133,8 @@
                         android:id="@+id/linear_layout_category_three"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginStart="4dp"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
 
@@ -201,7 +204,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginStart="0dp"
+                android:layout_marginStart="-8dp"
                 android:layout_marginTop="14dp"
                 android:layout_marginEnd="4dp"
                 android:maxWidth="320dp"
@@ -281,6 +284,7 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
             <LinearLayout
                 android:id="@+id/linear_layout_post_card"
                 android:layout_width="match_parent"
@@ -418,7 +422,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="백엔드와 다른 방식의 업무 스타일 직군으로는 웹 퍼블리셔(UI 개발)와 개발자(서버 개발자)의 업무 분리 방식이 있다. 이 경우는 주로 서버사이드가 클라이언트를 감싸는 방식이고, 전반적인 비지니스 로직은 개발자가 맡는다. MVC에서 Model, Controller가 백엔드의 소관이다."
+                        android:text="백엔드와 다른 방식의 업무 스타일 직군으로는 웹 퍼블리셔(UI 개발)와 개발자(서버 개발자)의 업무 분리 방식이 있다. 이 경우는 주로 서버사이드가 클라이언트를 감싸는 방식이고, 전반적인 비지니스 로직은 개발자가 맡는다. MVC에서 Model, Controller가 백엔드의 소관이다."
                         android:textColor="#252525"
                         android:textStyle="bold"
                         android:textSize="12sp"/>
@@ -481,7 +485,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="백엔드와 다른 방식의 업무 스타일 직군으로는 웹 퍼블리셔(UI 개발)와 개발자(서버 개발자)의 업무 분리 방식이 있다. 이 경우는 주로 서버사이드가 클라이언트를 감싸는 방식이고, 전반적인 비지니스 로직은 개발자가 맡는다. MVC에서 Model, Controller가 백엔드의 소관이다."
+                        android:text="백엔드와 다른 방식의 업무 스타일 직군으로는 웹 퍼블리셔(UI 개발)와 개발자(서버 개발자)의 업무 분리 방식이 있다. 이 경우는 주로 서버사이드가 클라이언트를 감싸는 방식이고, 전반적인 비지니스 로직은 개발자가 맡는다. MVC에서 Model, Controller가 백엔드의 소관이다."
                         android:textColor="#252525"
                         android:textStyle="bold"
                         android:textSize="12sp"/>
@@ -497,6 +501,47 @@
                         android:textSize="12sp"/>
                 </LinearLayout>
             </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="10dp"
+                android:padding="16dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_comments_box"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_comments_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comments"
+                        android:textColor="#252525"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginStart="10dp"/>
+
+                    <LinearLayout
+                        android:id="@+id/linear_layout_comments_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
