@@ -316,7 +316,7 @@ public class PostDetailActivity extends AppCompatActivity {
     }
 
 
-    private void renderComments (List<CommentResponse> comments) {
+    private void renderComments(List<CommentResponse> comments) {
         commentsListLayout.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
 
