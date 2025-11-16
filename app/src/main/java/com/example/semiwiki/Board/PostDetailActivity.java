@@ -20,14 +20,34 @@ import com.example.semiwiki.Login.RetrofitInstance;
 import com.example.semiwiki.Drawer.LikeService;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Deque;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import android.content.SharedPreferences;
+import android.view.LayoutInflater;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.example.semiwiki.Comment.CommentResponse;
+import com.example.semiwiki.Comment.CommentService;
+import com.example.semiwiki.Login.RetrofitInstance;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 
 public class PostDetailActivity extends AppCompatActivity {
 
@@ -43,6 +63,9 @@ public class PostDetailActivity extends AppCompatActivity {
 
     private long boardId;
     private String token;
+    private LinearLayout commentsListLayout;
+    private CommentService commentService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +88,7 @@ public class PostDetailActivity extends AppCompatActivity {
         loadDetail();
         loadLikeCount();
         loadIsLiked();
+        loadComments();
     }
 
     private void bindViews() {
@@ -83,6 +107,9 @@ public class PostDetailActivity extends AppCompatActivity {
         ivLogo = findViewById(R.id.iv_logo_semiwiki);
 
         drawerLayout = findViewById(R.id.drawerLayout);
+
+        commentsListLayout = findViewById(R.id.linear_layout_comments_list);
+
     }
 
     private void wireTopBar() {
@@ -253,6 +280,109 @@ public class PostDetailActivity extends AppCompatActivity {
             ((ScrollView) parent).smoothScrollTo(0, target.getTop());
         } else {
             parent.scrollTo(0, target.getTop());
+        }
+    }
+
+    private void loadComments() {
+        if (token == null) return;
+
+        Retrofit rt = RetrofitInstance.getRetrofitInstance();
+        commentService = rt.create(CommentService.class);
+
+        commentService.getComments(boardId, "Bearer " + token)
+                .enqueue(new Callback<List<CommentResponse>>() {
+                    @Override
+                    public void onResponse(Call<List<CommentResponse>> call,
+                                           Response<List<CommentResponse>> response) {
+                        if (!response.isSuccessful()) {
+                            Log.e("Comment", "fail " + response.code());
+                            renderComments(null);
+                            return;
+                        }
+
+                        List<CommentResponse> list = response.body();
+                        if (list != null) {
+                            sortCommentsLatestFirst(list);
+                        }
+                        renderComments(list);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<CommentResponse>> call, Throwable t) {
+                        Log.e("Comment", "net", t);
+                        renderComments(null);
+                    }
+                });
+    }
+
+
+    private void renderComments (List<CommentResponse> comments) {
+        commentsListLayout.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        if (comments == null || comments.isEmpty()) {
+            TextView noComments = new TextView(this);
+            noComments.setText("댓글이 없습니다.");
+            noComments.setTextSize(12f);
+            noComments.setTextColor(0xFF9E9E9E);
+
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            lp.leftMargin = dp(12);
+            lp.topMargin = dp(4);
+            lp.bottomMargin = dp(16) ;
+            noComments.setLayoutParams(lp);
+
+            commentsListLayout.addView(noComments);
+            return;
+        }
+
+        for(CommentResponse c : comments) {
+            View commentView = inflater.inflate(R.layout.item_comment,commentsListLayout, false);
+
+            TextView tvUserId = commentView.findViewById(R.id.tv_comment_user_id);
+            TextView tvTime = commentView.findViewById(R.id.tv_time);
+            TextView tvComment = commentView.findViewById(R.id.tv_comment);
+
+            tvUserId.setText(c.accountId);
+            tvComment.setText(c.contents);
+            tvTime.setText(formatDate(c.wroteAt));
+
+            commentsListLayout.addView(commentView);
+        }
+    }
+
+    private void sortCommentsLatestFirst(List<CommentResponse> list) {
+        Collections.sort(list, (a, b) -> {
+            Date da = parseDate(a.wroteAt);
+            Date db = parseDate(b.wroteAt);
+            return db.compareTo(da);
+        });
+    }
+
+    private Date parseDate(String wroteAt) {
+        try {
+            int dot = wroteAt.indexOf('.');
+            String trimmed = (dot != -1) ? wroteAt.substring(0, dot) : wroteAt;
+
+            SimpleDateFormat df =
+                    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+            return df.parse(trimmed);
+        } catch (Exception e) {
+            return new Date(0);
+        }
+    }
+
+    private String formatDate(String wroteAt) {
+        try {
+            Date date = parseDate(wroteAt);
+            SimpleDateFormat out =
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+            return out.format(date);
+        } catch (Exception e) {
+            return wroteAt;
         }
     }
 

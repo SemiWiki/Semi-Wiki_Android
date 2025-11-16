@@ -12,7 +12,8 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:src="@drawable/semiki_profile"
-        android:layout_marginEnd="8dp"/>
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"/>
 
     <LinearLayout
         android:id="@+id/linear_layout_comment1"
@@ -53,6 +54,7 @@
         android:text="DMS 화이팅"
         android:textSize="11sp"
         android:textColor="#252525"
-        android:layout_marginTop="4dp"/>
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"/>
 </LinearLayout>
 </LinearLayout>
