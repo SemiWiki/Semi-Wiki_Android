@@ -42,6 +42,7 @@ import android.widget.TextView;
 import com.example.semiwiki.Comment.CommentResponse;
 import com.example.semiwiki.Comment.CommentService;
 import com.example.semiwiki.Login.RetrofitInstance;
+import com.example.semiwiki.databinding.ActivityPostDetailBinding;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,6 +53,8 @@ import retrofit2.Retrofit;
 public class PostDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_BOARD_ID = "board_id";
+
+    private ActivityPostDetailBinding binding;
 
     private TextView tvTitle, tvLikeCount;
     private ImageView ivLike;
@@ -70,7 +73,8 @@ public class PostDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_detail);
+        binding = ActivityPostDetailBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         boardId = getIntent().getLongExtra(EXTRA_BOARD_ID, -1);
         if (boardId <= 0) { finish(); return; }
@@ -92,23 +96,21 @@ public class PostDetailActivity extends AppCompatActivity {
     }
 
     private void bindViews() {
-        tvTitle = findViewById(R.id.tv_post_title);
-        ivLike = findViewById(R.id.iv_likes);
-        tvLikeCount = findViewById(R.id.tv_likes);
+        tvTitle = binding.tvPostTitle;
+        ivLike = binding.ivLikes;
+        tvLikeCount = binding.tvLikes;
 
-        tvCat1 = findViewById(R.id.tv_category_01);
-        tvCat2 = findViewById(R.id.tv_category_02);
-        tvCat3 = findViewById(R.id.tv_category_03);
-        catWrap = findViewById(R.id.linear_layout_category_three);
+        tvCat1 = binding.tvCategory01;
+        tvCat2 = binding.tvCategory02;
+        tvCat3 = binding.tvCategory03;
+        catWrap = binding.linearLayoutCategoryThree;
 
-        tocContainer = findViewById(R.id.linear_layout_toc);
-        contentContainer = findViewById(R.id.linear_layout_post_card);
+        tocContainer = binding.linearLayoutToc;
+        contentContainer = binding.linearLayoutPostCard;
 
-        ivLogo = findViewById(R.id.iv_logo_semiwiki);
+        ivLogo = binding.ivLogoSemiwiki;
 
-        drawerLayout = findViewById(R.id.drawerLayout);
-
-        commentsListLayout = findViewById(R.id.linear_layout_comments_list);
+        commentsListLayout = binding.linearLayoutCommentsList;
 
     }
 
@@ -355,9 +357,9 @@ public class PostDetailActivity extends AppCompatActivity {
     }
 
     private void sortCommentsLatestFirst(List<CommentResponse> list) {
-        Collections.sort(list, (a, b) -> {
-            Date da = parseDate(a.wroteAt);
-            Date db = parseDate(b.wroteAt);
+        Collections.sort(list, (first, second) -> {
+            Date da = parseDate(first.wroteAt);
+            Date db = parseDate(second.wroteAt);
             return db.compareTo(da);
         });
     }
