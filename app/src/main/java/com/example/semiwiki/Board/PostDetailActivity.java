@@ -49,6 +49,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import io.noties.markwon.Markwon;
+import io.noties.markwon.html.HtmlPlugin;
+import io.noties.markwon.image.ImagesPlugin;
 
 public class PostDetailActivity extends AppCompatActivity {
 
@@ -68,6 +71,8 @@ public class PostDetailActivity extends AppCompatActivity {
     private String token;
     private LinearLayout commentsListLayout;
     private CommentService commentService;
+    private Markwon markwon;
+
 
 
     @Override
@@ -75,6 +80,11 @@ public class PostDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityPostDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        markwon = Markwon.builder(this)
+                .usePlugin(HtmlPlugin.create())
+                .usePlugin(ImagesPlugin.create())
+                .build();
 
         boardId = getIntent().getLongExtra(EXTRA_BOARD_ID, -1);
         if (boardId <= 0) { finish(); return; }
@@ -116,7 +126,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
     private void wireTopBar() {
         if (ivLogo != null) {
-            ivLogo.setOnClickListener(v -> {
+            ivLogo.setOnClickListener(v-> {
                 Intent intent = new Intent(PostDetailActivity.this, BoardActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
@@ -245,12 +255,21 @@ public class PostDetailActivity extends AppCompatActivity {
             lp.topMargin = dp(4);
             sec.addView(line, lp);
 
-            TextView body = tBold(h.getContents() == null ? "" : h.getContents(), 0xFF252525, 12);
+            String raw = h.getContents();
+            if(raw == null) raw="";
+
+            TextView body = new TextView(this);
+            body.setTextColor(0xFF252525);
+            body.setTextSize(12f);
+
+            markwon.setMarkdown(body, raw);
+
             LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
             bp.topMargin = dp(10);
             sec.addView(body, bp);
-
             contentContainer.addView(sec);
 
             List<BoardDetailDTO.HeaderDTO> children = h.getChildren();
