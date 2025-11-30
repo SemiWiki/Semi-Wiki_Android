@@ -1,2 +1,21 @@
+# Gradle
+.gradle/
 build/
+
+# Local configuration
+local.properties
+
+# Android Studio
 .idea/
+*.iml
+
+# Generated files
+captures/
+output.json
+
+# Keystore
+*.jks
+*.keystore
+
+# Logs
+*.log
