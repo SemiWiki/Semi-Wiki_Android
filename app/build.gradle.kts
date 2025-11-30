@@ -50,6 +50,10 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
 
+    implementation ("io.noties.markwon:core:4.6.2")
+    implementation ("io.noties.markwon:html:4.6.2")
+    implementation ("io.noties.markwon:image:4.6.2")
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
