@@ -19,3 +19,6 @@ output.json
 
 # Logs
 *.log
+
+# Retrofit base URL
+app/src/main/java/com/example/semiwiki/Login/RetrofitInstance.java
