@@ -30,6 +30,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import android.net.Uri;
+
 public class BoardActivity extends AppCompatActivity {
 
     private ActivityBoardBinding binding;
@@ -77,6 +79,12 @@ public class BoardActivity extends AppCompatActivity {
                 }
                 p.edit().remove(KEY_AT).remove("refresh_token").remove(KEY_ID).apply();
                 goLoginAndFinish();
+            }
+
+            @Override
+            public void onClickInquiry() {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://naver.me/FAPaPAQs"));
+                startActivity(intent);
             }
         });
         header.setListener(new HeaderView.Listener() {
