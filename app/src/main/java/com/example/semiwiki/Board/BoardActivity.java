@@ -108,6 +108,7 @@ public class BoardActivity extends AppCompatActivity {
 
         String initialKeyword = getIntent().getStringExtra("keyword");
         if (initialKeyword != null && !initialKeyword.trim().isEmpty()) {
+            binding.ivSearch.post(() -> binding.ivSearch.performClick());
             performSearch(initialKeyword.trim());
         } else {
             loadBoardListFromApi(currentOrderBy);
