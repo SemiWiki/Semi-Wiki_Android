@@ -65,7 +65,14 @@ public class MyLikesActivity extends AppCompatActivity {
         });
 
         header.setListener(new HeaderView.Listener() {
-            @Override public void onSearchSubmit(String keyword) { performSearch(keyword); }
+            @Override
+            public void onSearchSubmit(String keyword) {
+                String safeKeyword = (keyword == null) ? "" : keyword.trim();
+
+                Intent intent = new Intent(MyLikesActivity.this, com.example.semiwiki.Board.BoardActivity.class);
+                intent.putExtra("keyword", safeKeyword);
+                startActivity(intent);
+            }
             @Override public void onSearchCancel() {
                 loadMyLikedPosts();
                 showList();
@@ -158,30 +165,6 @@ public class MyLikesActivity extends AppCompatActivity {
                         Toast.makeText(MyLikesActivity.this, "네트워크 오류가 발생했어요", Toast.LENGTH_SHORT).show();
                         showEmpty();
                     }
-                });
-    }
-
-    private void performSearch(String keyword) {
-        if (keyword == null || keyword.trim().isEmpty()) return;
-
-        SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
-        String token = prefs.getString(KEY_AT, null);
-        if (token == null || token.isEmpty()) { handleAuthError(); return; }
-
-        Retrofit retrofit = RetrofitInstance.getRetrofitInstance();
-        BoardService service = retrofit.create(BoardService.class);
-
-        service.getBoardList("Bearer " + token, keyword.trim(), null, "recent", 0, 20)
-                .enqueue(new Callback<List<BoardListItemDTO>>() {
-                    @Override public void onResponse(Call<List<BoardListItemDTO>> call, Response<List<BoardListItemDTO>> res) {
-                        if (res.code() == 401 || res.code() == 403) { handleAuthError(); return; }
-                        if (res.isSuccessful() && res.body() != null) {
-                            List<BoardItem> ui = BoardMappers.toBoardItems(res.body());
-                            if (ui.isEmpty()) showEmpty();
-                            else { adapter.submitList(ui); showList(); }
-                        } else showEmpty();
-                    }
-                    @Override public void onFailure(Call<List<BoardListItemDTO>> call, Throwable t) { showEmpty(); }
                 });
     }
 
