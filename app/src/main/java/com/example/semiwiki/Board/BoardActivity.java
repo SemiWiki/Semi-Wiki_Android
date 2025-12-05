@@ -42,6 +42,10 @@ public class BoardActivity extends AppCompatActivity {
     private static final String KEY_AT = "access_token";
     private static final String KEY_ID = "account_id";
 
+    private static final String AUTH_HEADER_PREFIX = "Bearer ";
+    private static final int DEFAULT_OFFSET = 0;
+    private static final int DEFAULT_LIMIT = 20;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -188,7 +192,14 @@ public class BoardActivity extends AppCompatActivity {
         String token = prefs.getString(KEY_AT, null);
         if (token == null || token.isEmpty()) { handleAuthError(); return; }
 
-        service.getBoardList("Bearer " + token, null, null, orderBy, 0, 20)
+        service.getBoardList(
+                        AUTH_HEADER_PREFIX + token,
+                        null,
+                        null,
+                        orderBy,
+                        DEFAULT_OFFSET,
+                        DEFAULT_LIMIT
+                )
                 .enqueue(new Callback<List<BoardListItemDTO>>() {
                     @Override public void onResponse(Call<List<BoardListItemDTO>> call, Response<List<BoardListItemDTO>> response) {
                         if (response.code() == 401 || response.code() == 403) { handleAuthError(); return; }
@@ -213,7 +224,14 @@ public class BoardActivity extends AppCompatActivity {
         String token = prefs.getString(KEY_AT, null);
         if (token == null || token.isEmpty()) { handleAuthError(); return; }
 
-        service.getBoardList("Bearer " + token, keyword, null, "recent", 0, 20)
+        service.getBoardList(
+                        AUTH_HEADER_PREFIX + token,
+                        keyword,
+                        null,
+                        "recent",
+                        DEFAULT_OFFSET,
+                        DEFAULT_LIMIT
+                )
                 .enqueue(new Callback<List<BoardListItemDTO>>() {
                     @Override public void onResponse(Call<List<BoardListItemDTO>> call, Response<List<BoardListItemDTO>> response) {
                         if (response.code() == 401 || response.code() == 403) { handleAuthError(); return; }
