@@ -12,9 +12,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.semiwiki.Drawer.MyLikesActivity;
+import com.example.semiwiki.Drawer.MyPostsActivity;
+import com.example.semiwiki.Login.LoginActivity;
 import com.example.semiwiki.R;
 import com.example.semiwiki.Login.RetrofitInstance;
 import com.example.semiwiki.Drawer.LikeService;
@@ -27,31 +29,25 @@ import java.util.Date;
 import java.util.Deque;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.semiwiki.Comment.CommentResponse;
 import com.example.semiwiki.Comment.CommentService;
-import com.example.semiwiki.Login.RetrofitInstance;
+import com.example.semiwiki.common.HeaderView;
 import com.example.semiwiki.databinding.ActivityPostDetailBinding;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import io.noties.markwon.Markwon;
 import io.noties.markwon.html.HtmlPlugin;
 import io.noties.markwon.image.ImagesPlugin;
+
+
 
 public class PostDetailActivity extends AppCompatActivity {
 
@@ -72,7 +68,7 @@ public class PostDetailActivity extends AppCompatActivity {
     private LinearLayout commentsListLayout;
     private CommentService commentService;
     private Markwon markwon;
-
+    private HeaderView headerView;
 
 
     @Override
@@ -87,13 +83,15 @@ public class PostDetailActivity extends AppCompatActivity {
                 .build();
 
         boardId = getIntent().getLongExtra(EXTRA_BOARD_ID, -1);
-        if (boardId <= 0) { finish(); return; }
+        if (boardId <= 0) {
+            finish();
+            return;
+        }
 
         SharedPreferences prefs = getSharedPreferences("semiwiki_prefs", MODE_PRIVATE);
         token = prefs.getString("access_token", null);
 
         bindViews();
-        wireTopBar();
 
         ivLike.setClickable(false);
         ivLike.setFocusable(false);
@@ -122,17 +120,57 @@ public class PostDetailActivity extends AppCompatActivity {
 
         commentsListLayout = binding.linearLayoutCommentsList;
 
-    }
+        headerView = new HeaderView(this);
 
-    private void wireTopBar() {
-        if (ivLogo != null) {
-            ivLogo.setOnClickListener(v-> {
+        headerView.bindWithoutXml(
+                binding.constraintLayoutTop,
+                binding.ivMenu,
+                binding.ivLogoSemiwiki,
+                binding.ivSearch
+        );
+
+        headerView.bindDrawer(
+                binding.drawerLayout, binding.navView,
+                new HeaderView.DrawerActions() {
+                    @Override
+                    public void onClickMyPosts() {
+                        startActivity(new Intent(PostDetailActivity.this, MyPostsActivity.class));
+                    }
+
+                    @Override
+                    public void onClickMyLikes() {
+                        startActivity(new Intent(PostDetailActivity.this, MyLikesActivity.class));
+                    }
+
+                    @Override
+                    public void onClickLogout() {
+                        doLogout();
+                    }
+                }
+        );
+
+        headerView.setListener(new HeaderView.Listener() {
+            @Override
+            public void onSearchSubmit(String keyword) {
+                String safeKeyword = (keyword == null) ? "" : keyword.trim();
+
                 Intent intent = new Intent(PostDetailActivity.this, BoardActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra("keyword", safeKeyword);
                 startActivity(intent);
-            });
-        }
-        }
+            }
+
+            @Override
+            public void onSearchCancel() {
+            }
+        });
+
+
+        ivLogo.setOnClickListener(v -> {
+            Intent intent = new Intent(PostDetailActivity.this, BoardActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+    }
 
     private void loadDetail() {
         if (token == null) return;
@@ -200,7 +238,7 @@ public class PostDetailActivity extends AppCompatActivity {
     }
 
     private void renderCategories(List<String> cats) {
-        TextView[] chips = { tvCat1, tvCat2, tvCat3 };
+        TextView[] chips = {tvCat1, tvCat2, tvCat3};
         for (TextView v : chips) v.setVisibility(View.GONE);
 
         if (cats == null || cats.isEmpty()) {
@@ -256,7 +294,7 @@ public class PostDetailActivity extends AppCompatActivity {
             sec.addView(line, lp);
 
             String raw = h.getContents();
-            if(raw == null) raw="";
+            if (raw == null) raw = "";
 
             TextView body = new TextView(this);
             body.setTextColor(0xFF252525);
@@ -292,7 +330,10 @@ public class PostDetailActivity extends AppCompatActivity {
         View target = null;
         for (int i = 0; i < contentContainer.getChildCount(); i++) {
             View v = contentContainer.getChildAt(i);
-            if (tag.equals(v.getTag())) { target = v; break; }
+            if (tag.equals(v.getTag())) {
+                target = v;
+                break;
+            }
         }
         if (target == null) return;
 
@@ -353,15 +394,15 @@ public class PostDetailActivity extends AppCompatActivity {
             );
             lp.leftMargin = dp(12);
             lp.topMargin = dp(4);
-            lp.bottomMargin = dp(16) ;
+            lp.bottomMargin = dp(16);
             noComments.setLayoutParams(lp);
 
             commentsListLayout.addView(noComments);
             return;
         }
 
-        for(CommentResponse c : comments) {
-            View commentView = inflater.inflate(R.layout.item_comment,commentsListLayout, false);
+        for (CommentResponse c : comments) {
+            View commentView = inflater.inflate(R.layout.item_comment, commentsListLayout, false);
 
             TextView tvUserId = commentView.findViewById(R.id.tv_comment_user_id);
             TextView tvTime = commentView.findViewById(R.id.tv_time);
@@ -382,6 +423,7 @@ public class PostDetailActivity extends AppCompatActivity {
             return db.compareTo(da);
         });
     }
+
 
     private Date parseDate(String wroteAt) {
         try {
@@ -410,4 +452,22 @@ public class PostDetailActivity extends AppCompatActivity {
     private int dp(int v) {
         return Math.round(getResources().getDisplayMetrics().density * v);
     }
+
+    private void doLogout() {
+        SharedPreferences prefs = getSharedPreferences("semiwiki_prefs", MODE_PRIVATE);
+        prefs.edit()
+                .remove("access_token")
+                .remove("refresh_token")
+                .remove("account_id")  
+                .apply();
+
+        Intent intent = new Intent(PostDetailActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+
+        finish();
+    }
 }
+
