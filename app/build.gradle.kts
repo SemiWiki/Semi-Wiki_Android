@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -13,7 +15,14 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        val props = Properties()
+        val localPropsFile = rootProject.file("local.properties")
+        if (localPropsFile.exists()) {
+            props.load(localPropsFile.inputStream())
+        }
+
+        val baseUrl = props.getProperty("BASE_URL") ?: "http://10.0.2.2:8080/"
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
 
     buildTypes {
@@ -32,12 +41,12 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
 }
 
 dependencies {
-
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
