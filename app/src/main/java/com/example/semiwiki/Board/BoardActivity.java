@@ -31,6 +31,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import android.net.Uri;
+import com.example.semiwiki.BuildConfig;
 
 public class BoardActivity extends AppCompatActivity {
 
@@ -87,7 +88,7 @@ public class BoardActivity extends AppCompatActivity {
 
             @Override
             public void onClickInquiry() {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://naver.me/FAPaPAQs"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.INQUIRY_URL));
                 startActivity(intent);
             }
         });
