@@ -180,7 +180,7 @@ public class BoardActivity extends AppCompatActivity {
         String token = prefs.getString(KEY_AT, null);
         if (token == null || token.isEmpty()) { handleAuthError(); return; }
 
-        service.getBoardList("Bearer " + token, null, null, orderBy, 0, 20)
+        service.getBoardList("Bearer " + token, null, null, orderBy, 0, 1000)
                 .enqueue(new Callback<List<BoardListItemDTO>>() {
                     @Override public void onResponse(Call<List<BoardListItemDTO>> call, Response<List<BoardListItemDTO>> response) {
                         if (response.code() == 401 || response.code() == 403) { handleAuthError(); return; }
@@ -205,7 +205,7 @@ public class BoardActivity extends AppCompatActivity {
         String token = prefs.getString(KEY_AT, null);
         if (token == null || token.isEmpty()) { handleAuthError(); return; }
 
-        service.getBoardList("Bearer " + token, keyword, null, "recent", 0, 20)
+        service.getBoardList("Bearer " + token, keyword, null, "recent", 0, 1000)
                 .enqueue(new Callback<List<BoardListItemDTO>>() {
                     @Override public void onResponse(Call<List<BoardListItemDTO>> call, Response<List<BoardListItemDTO>> response) {
                         if (response.code() == 401 || response.code() == 403) { handleAuthError(); return; }

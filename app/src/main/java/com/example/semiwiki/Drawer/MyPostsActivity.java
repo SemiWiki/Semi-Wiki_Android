@@ -214,7 +214,7 @@ public class MyPostsActivity extends AppCompatActivity {
         Retrofit retrofit = RetrofitInstance.getRetrofitInstance();
         BoardService service = retrofit.create(BoardService.class);
 
-        service.getBoardList("Bearer " + token, keyword.trim(), null, "recent", 0, 20)
+        service.getBoardList("Bearer " + token, keyword.trim(), null, "recent", 0, 1000)
                 .enqueue(new Callback<List<BoardListItemDTO>>() {
                     @Override public void onResponse(Call<List<BoardListItemDTO>> call, Response<List<BoardListItemDTO>> res) {
                         if (res.code() == 401 || res.code() == 403) { handleAuthError(); return; }
