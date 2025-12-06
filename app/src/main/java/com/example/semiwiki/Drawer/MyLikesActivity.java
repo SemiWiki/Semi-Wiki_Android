@@ -36,6 +36,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import android.net.Uri;
+
+
+
 public class MyLikesActivity extends AppCompatActivity {
 
     private static final String TAG = "MyLikes";
@@ -62,6 +66,15 @@ public class MyLikesActivity extends AppCompatActivity {
                 if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) binding.drawerLayout.closeDrawer(GravityCompat.START);
             }
             @Override public void onClickLogout() { doLogout(); }
+
+            @Override
+            public void onClickInquiry() {
+                Intent intent = new Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://naver.me/FAPaPAQs")
+                );
+                startActivity(intent);
+            }
         });
 
         header.setListener(new HeaderView.Listener() {
