@@ -70,6 +70,12 @@ public class PostDetailActivity extends AppCompatActivity {
     private Markwon markwon;
     private HeaderView headerView;
 
+    private static final String PREF = "semiwiki_prefs";
+    private static final String KEY_AT = "access_token";
+    private static final String KEY_RT = "refresh_token";
+    private static final String KEY_ID = "account_id";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +94,8 @@ public class PostDetailActivity extends AppCompatActivity {
             return;
         }
 
-        SharedPreferences prefs = getSharedPreferences("semiwiki_prefs", MODE_PRIVATE);
-        token = prefs.getString("access_token", null);
+        SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
+        token = prefs.getString(KEY_AT, null);
 
         bindViews();
 
@@ -453,13 +459,13 @@ public class PostDetailActivity extends AppCompatActivity {
         return Math.round(getResources().getDisplayMetrics().density * v);
     }
 
-    private void doLogout() {
-        SharedPreferences prefs = getSharedPreferences("semiwiki_prefs", MODE_PRIVATE);
-        prefs.edit()
-                .remove("access_token")
-                .remove("refresh_token")
-                .remove("account_id")  
-                .apply();
+        private void doLogout() {
+            SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
+            prefs.edit()
+                    .remove(KEY_AT)
+                    .remove(KEY_RT)
+                    .remove(KEY_ID)
+                    .apply();
 
         Intent intent = new Intent(PostDetailActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
