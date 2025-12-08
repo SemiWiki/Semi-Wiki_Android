@@ -262,13 +262,16 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     private void performSearch(String keyword) {
-        if(keyword == null || keyword.trim().isEmpty()) {
+        String trimmed = keyword == null ? "" : keyword.trim();
+
+        if (trimmed.isEmpty()) {
             clearSearchAndReload();
-            return;
+        } else {
+            currentKeyword = trimmed;
+            loadBoardListFromApi(currentOrderBy); 
         }
-        currentKeyword = keyword.trim();
-        loadBoardListFromApi("recent");
     }
+
 
     private void showEmpty() {
         binding.viewEmpty.getRoot().setVisibility(View.VISIBLE);
