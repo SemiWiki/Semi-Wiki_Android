@@ -21,7 +21,7 @@ android {
             props.load(localPropsFile.inputStream())
         }
 
-        val baseUrl = props.getProperty("BASE_URL") ?: "http://10.0.2.2:8080/"
+        val baseUrl = props.getProperty("BASE_URL") ?: error("local.properties에 BASE_URL이 없습니다.")
         buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
 
