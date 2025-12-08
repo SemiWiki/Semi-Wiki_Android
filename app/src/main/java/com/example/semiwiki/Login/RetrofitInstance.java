@@ -38,7 +38,6 @@ public class RetrofitInstance {
                     String path = req.url().encodedPath();
                     boolean authNotNeeded =
                             path.contains("/auth/signin") ||
-                                    path.contains("/auth/sign-in") ||
                                     path.contains("/logout");
 
                     if (!authNotNeeded && currentAccessToken != null && !currentAccessToken.isEmpty()) {
