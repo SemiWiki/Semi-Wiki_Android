@@ -41,7 +41,6 @@ public class BoardActivity extends AppCompatActivity {
     private static final String KEY_ID = "account_id";
 
     private String currentKeyword = null;
-    private String currentOrderBy = "recent";
 
 
     @Override
@@ -111,7 +110,7 @@ public class BoardActivity extends AppCompatActivity {
             binding.ivSearch.post(() -> binding.ivSearch.performClick());
             performSearch(initialKeyword.trim());
         } else {
-            loadBoardListFromApi(currentOrderBy);
+            loadBoardListFromApi(getCurrentOrderBy());
         }
     }
 
@@ -140,8 +139,11 @@ public class BoardActivity extends AppCompatActivity {
 
     private void clearSearchAndReload() {
         currentKeyword = null;
+        binding.tabNewest.setSelected(true);
+        binding.tabLikes.setSelected(false);
         loadBoardListFromApi("recent");
     }
+
 
 
     private void setupTabs() {
@@ -189,18 +191,16 @@ public class BoardActivity extends AppCompatActivity {
                 });
     }
 
-    private void loadBoardListFromApi(String orderBy) {
-        currentOrderBy = orderBy;
+        private void loadBoardListFromApi(String orderBy) {
+            Retrofit retrofit = RetrofitInstance.getRetrofitInstance();
+            BoardService service = retrofit.create(BoardService.class);
 
-        Retrofit retrofit = RetrofitInstance.getRetrofitInstance();
-        BoardService service = retrofit.create(BoardService.class);
+            SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
+            String token = prefs.getString(KEY_AT, null);
+            if (token == null || token.isEmpty()) { handleAuthError(); return; }
 
-        SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
-        String token = prefs.getString(KEY_AT, null);
-        if (token == null || token.isEmpty()) { handleAuthError(); return; }
-
-        service.getBoardList("Bearer " + token, currentKeyword, null, orderBy, 0, 20)
-                .enqueue(new Callback<List<BoardListItemDTO>>() {
+            service.getBoardList("Bearer " + token, currentKeyword, null, orderBy, 0, 20)
+                    .enqueue(new Callback<List<BoardListItemDTO>>() {
                     @Override
                     public void onResponse(Call<List<BoardListItemDTO>> call,
                                            Response<List<BoardListItemDTO>> response) {
@@ -261,15 +261,19 @@ public class BoardActivity extends AppCompatActivity {
 
     }
 
+    private String getCurrentOrderBy() {
+        return binding.tabNewest.isSelected() ? "recent" : "like";
+    }
+
+
     private void performSearch(String keyword) {
         String trimmed = keyword == null ? "" : keyword.trim();
-
         if (trimmed.isEmpty()) {
             clearSearchAndReload();
-        } else {
-            currentKeyword = trimmed;
-            loadBoardListFromApi(currentOrderBy); 
+            return;
         }
+        currentKeyword = trimmed;
+        loadBoardListFromApi(getCurrentOrderBy());
     }
 
 
