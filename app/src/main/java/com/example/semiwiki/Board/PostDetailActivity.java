@@ -159,16 +159,19 @@ public class PostDetailActivity extends AppCompatActivity {
             @Override
             public void onSearchSubmit(String keyword) {
                 String safeKeyword = (keyword == null) ? "" : keyword.trim();
-
+                if (safeKeyword.isEmpty()) {
+                    return;
+                }
                 Intent intent = new Intent(PostDetailActivity.this, BoardActivity.class);
                 intent.putExtra("keyword", safeKeyword);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             }
-
             @Override
             public void onSearchCancel() {
             }
         });
+
 
 
         ivLogo.setOnClickListener(v -> {
