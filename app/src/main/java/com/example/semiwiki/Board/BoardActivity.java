@@ -237,7 +237,6 @@ public class BoardActivity extends AppCompatActivity {
                             adapter.submitList(uiList);
                             showList();
                         } else {
-                            Log.e("BoardActivity", "list fail: " + response.code());
                             adapter.submitList(new ArrayList<>());
                             if (isSearching) {
                                 showEmpty();
