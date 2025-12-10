@@ -30,6 +30,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import android.net.Uri;
+import com.example.semiwiki.BuildConfig;
+
 public class BoardActivity extends AppCompatActivity {
 
     private ActivityBoardBinding binding;
@@ -39,6 +42,10 @@ public class BoardActivity extends AppCompatActivity {
     private static final String PREF = "semiwiki_prefs";
     private static final String KEY_AT = "access_token";
     private static final String KEY_ID = "account_id";
+
+    private static final String AUTH_HEADER_PREFIX = "Bearer ";
+    private static final int DEFAULT_OFFSET = 0;
+    private static final int DEFAULT_LIMIT = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +84,12 @@ public class BoardActivity extends AppCompatActivity {
                 }
                 p.edit().remove(KEY_AT).remove("refresh_token").remove(KEY_ID).apply();
                 goLoginAndFinish();
+            }
+
+            @Override
+            public void onClickInquiry() {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.INQUIRY_URL));
+                startActivity(intent);
             }
         });
         header.setListener(new HeaderView.Listener() {
@@ -180,7 +193,14 @@ public class BoardActivity extends AppCompatActivity {
         String token = prefs.getString(KEY_AT, null);
         if (token == null || token.isEmpty()) { handleAuthError(); return; }
 
-        service.getBoardList("Bearer " + token, null, null, orderBy, 0, 1000)
+        service.getBoardList(
+                        AUTH_HEADER_PREFIX + token,
+                        null,
+                        null,
+                        orderBy,
+                        DEFAULT_OFFSET,
+                        DEFAULT_LIMIT
+                )
                 .enqueue(new Callback<List<BoardListItemDTO>>() {
                     @Override public void onResponse(Call<List<BoardListItemDTO>> call, Response<List<BoardListItemDTO>> response) {
                         if (response.code() == 401 || response.code() == 403) { handleAuthError(); return; }
@@ -205,7 +225,14 @@ public class BoardActivity extends AppCompatActivity {
         String token = prefs.getString(KEY_AT, null);
         if (token == null || token.isEmpty()) { handleAuthError(); return; }
 
-        service.getBoardList("Bearer " + token, keyword, null, "recent", 0, 1000)
+        service.getBoardList(
+                        AUTH_HEADER_PREFIX + token,
+                        keyword,
+                        null,
+                        "recent",
+                        DEFAULT_OFFSET,
+                        DEFAULT_LIMIT
+                )
                 .enqueue(new Callback<List<BoardListItemDTO>>() {
                     @Override public void onResponse(Call<List<BoardListItemDTO>> call, Response<List<BoardListItemDTO>> response) {
                         if (response.code() == 401 || response.code() == 403) { handleAuthError(); return; }

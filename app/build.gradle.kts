@@ -15,14 +15,19 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
         val props = Properties()
         val localPropsFile = rootProject.file("local.properties")
         if (localPropsFile.exists()) {
             props.load(localPropsFile.inputStream())
         }
 
-        val baseUrl = props.getProperty("BASE_URL") ?: error("local.properties에 BASE_URL이 없습니다.")
+        val baseUrl = props.getProperty("BASE_URL") ?:  error("local.properties에 BASE_URL이 없습니다.")
         buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+
+        val inquiryUrl = props.getProperty("INQUIRY_URL") ?: "\"\""
+        buildConfigField("String", "INQUIRY_URL", "\"$inquiryUrl\"")
     }
 
     buildTypes {
