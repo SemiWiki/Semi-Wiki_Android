@@ -150,7 +150,7 @@ public class MyLikesActivity extends AppCompatActivity {
         Retrofit retrofit = RetrofitInstance.getRetrofitInstance();
         UserService userService = retrofit.create(UserService.class);
 
-        userService.getUserLikedPosts("Bearer " + token, accountId, 0, 20)
+        userService.getUserLikedPosts("Bearer " + token, accountId, 0, 1000)
                 .enqueue(new Callback<List<BoardListItemDTO>>() {
                     @Override
                     public void onResponse(Call<List<BoardListItemDTO>> call, Response<List<BoardListItemDTO>> resp) {
