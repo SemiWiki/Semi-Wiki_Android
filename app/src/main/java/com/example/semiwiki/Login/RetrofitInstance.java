@@ -10,19 +10,19 @@ import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import com.example.semiwiki.BuildConfig;
 
 public class RetrofitInstance {
 
-
-    private static final String BASE_URL = "http://13.124.100.165:8080/";
+    private static final String BASE_URL = BuildConfig.BASE_URL;
 
     private static Retrofit retrofit;
-
     private static volatile String currentAccessToken = null;
 
     public static void setAccessToken(String token) {
         currentAccessToken = token;
     }
+
     public static String getAccessToken() {
         return currentAccessToken;
     }
@@ -36,7 +36,9 @@ public class RetrofitInstance {
                     Request req = chain.request();
 
                     String path = req.url().encodedPath();
-                    boolean authNotNeeded = path.contains("/auth/signin") || path.contains("/logout");
+                    boolean authNotNeeded =
+                            path.contains("/auth/signin") ||
+                                    path.contains("/logout");
 
                     if (!authNotNeeded && currentAccessToken != null && !currentAccessToken.isEmpty()) {
                         req = req.newBuilder()
