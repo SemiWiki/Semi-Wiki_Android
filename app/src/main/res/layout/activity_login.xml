@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
-        android:paddingTop="100dp"
+        android:paddingTop="120dp"
         android:paddingBottom="24dp"
         android:background="@android:color/white">
 

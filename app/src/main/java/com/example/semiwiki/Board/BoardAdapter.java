@@ -117,7 +117,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.VH> {
         tv.setBackground(ContextCompat.getDrawable(ctx, R.drawable.bg_chip));
 
         int height = dp(ctx, 20);
-        int padH = dp(ctx, 6);
+        int padH = dp(ctx, 4);
         tv.setPadding(padH, 0, padH, 0);
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(

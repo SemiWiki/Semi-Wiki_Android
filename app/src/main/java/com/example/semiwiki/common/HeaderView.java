@@ -22,6 +22,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.semiwiki.R;
 import com.google.android.material.navigation.NavigationView;
 
+import android.net.Uri;
+
+
 public class HeaderView extends FrameLayout {
     public interface Listener {
         void onSearchSubmit(String keyword);
@@ -31,6 +34,7 @@ public class HeaderView extends FrameLayout {
         void onClickMyPosts();
         void onClickMyLikes();
         void onClickLogout();
+        void onClickInquiry();
     }
 
     private ConstraintLayout headerContainer;
@@ -74,6 +78,7 @@ public class HeaderView extends FrameLayout {
 
         View rowMyPosts = header.findViewById(R.id.row_my_posts);
         View rowLiked = header.findViewById(R.id.row_liked_posts);
+        View rowInquiry = header.findViewById(R.id.row_inquiry);
         View rowLogout = header.findViewById(R.id.layout_layout);
 
         if (rowMyPosts != null) rowMyPosts.setOnClickListener(v -> {
@@ -84,10 +89,15 @@ public class HeaderView extends FrameLayout {
             if (drawerActions != null) drawerActions.onClickMyLikes();
             drawerLayout.closeDrawer(GravityCompat.START);
         });
+        if (rowInquiry != null) rowInquiry.setOnClickListener(v -> {
+            if (drawerActions != null) drawerActions.onClickInquiry();
+            drawerLayout.closeDrawer(GravityCompat.START);
+        });
         if (rowLogout != null) rowLogout.setOnClickListener(v -> {
             if (drawerActions != null) drawerActions.onClickLogout();
             drawerLayout.closeDrawer(GravityCompat.START);
         });
+
     }
 
     public void updateDrawerUser(String accountId, String postCountText) {

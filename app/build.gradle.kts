@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -14,6 +16,18 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val props = Properties()
+        val localPropsFile = rootProject.file("local.properties")
+        if (localPropsFile.exists()) {
+            props.load(localPropsFile.inputStream())
+        }
+
+        val baseUrl = props.getProperty("BASE_URL") ?:  error("local.properties에 BASE_URL이 없습니다.")
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+
+        val inquiryUrl = props.getProperty("INQUIRY_URL") ?: "\"\""
+        buildConfigField("String", "INQUIRY_URL", "\"$inquiryUrl\"")
     }
 
     buildTypes {
@@ -32,12 +46,12 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
 }
 
 dependencies {
-
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 

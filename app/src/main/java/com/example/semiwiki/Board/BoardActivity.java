@@ -30,6 +30,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import android.net.Uri;
+import com.example.semiwiki.BuildConfig;
+
 public class BoardActivity extends AppCompatActivity {
 
     private ActivityBoardBinding binding;
@@ -39,6 +42,9 @@ public class BoardActivity extends AppCompatActivity {
     private static final String PREF = "semiwiki_prefs";
     private static final String KEY_AT = "access_token";
     private static final String KEY_ID = "account_id";
+
+    private String currentKeyword = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +84,16 @@ public class BoardActivity extends AppCompatActivity {
                 p.edit().remove(KEY_AT).remove("refresh_token").remove(KEY_ID).apply();
                 goLoginAndFinish();
             }
+
+            @Override
+            public void onClickInquiry() {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.INQUIRY_URL));
+                startActivity(intent);
+            }
         });
         header.setListener(new HeaderView.Listener() {
             @Override public void onSearchSubmit(String keyword) { performSearch(keyword); }
-            @Override public void onSearchCancel() { showList(); }
+            @Override public void onSearchCancel() { clearSearchAndReload(); }
         });
 
 
@@ -101,7 +113,14 @@ public class BoardActivity extends AppCompatActivity {
         setupTabs();
         initDrawerHeaderTexts();
         fillHeaderFromApiAndUpdateDrawer();
-        loadBoardListFromApi();
+
+        String initialKeyword = getIntent().getStringExtra("keyword");
+        if (initialKeyword != null && !initialKeyword.trim().isEmpty()) {
+            binding.ivSearch.post(() -> binding.ivSearch.performClick());
+            performSearch(initialKeyword.trim());
+        } else {
+            loadBoardListFromApi(getCurrentOrderBy());
+        }
     }
 
     @Override
@@ -127,6 +146,15 @@ public class BoardActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    private void clearSearchAndReload() {
+        currentKeyword = null;
+        binding.tabNewest.setSelected(true);
+        binding.tabLikes.setSelected(false);
+        loadBoardListFromApi("recent");
+    }
+
+
+
     private void setupTabs() {
         View.OnClickListener tabClick = v -> {
             binding.tabNewest.setSelected(false);
@@ -142,6 +170,8 @@ public class BoardActivity extends AppCompatActivity {
         binding.tabLikes.setOnClickListener(tabClick);
         binding.tabNewest.setSelected(true);
     }
+
+
 
     private void initDrawerHeaderTexts() {
         SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
@@ -170,53 +200,90 @@ public class BoardActivity extends AppCompatActivity {
                 });
     }
 
-    private void loadBoardListFromApi() { loadBoardListFromApi("recent"); }
+        private void loadBoardListFromApi(String orderBy) {
+            Retrofit retrofit = RetrofitInstance.getRetrofitInstance();
+            BoardService service = retrofit.create(BoardService.class);
 
-    private void loadBoardListFromApi(String orderBy) {
-        Retrofit retrofit = RetrofitInstance.getRetrofitInstance();
-        BoardService service = retrofit.create(BoardService.class);
+            SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
+            String token = prefs.getString(KEY_AT, null);
+            if (token == null || token.isEmpty()) { handleAuthError(); return; }
 
-        SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
-        String token = prefs.getString(KEY_AT, null);
-        if (token == null || token.isEmpty()) { handleAuthError(); return; }
+            service.getBoardList("Bearer " + token, currentKeyword, null, orderBy, 0, 20)
+                    .enqueue(new Callback<List<BoardListItemDTO>>() {
+                    @Override
+                    public void onResponse(Call<List<BoardListItemDTO>> call,
+                                           Response<List<BoardListItemDTO>> response) {
+                        if (response.code() == 401 || response.code() == 403) {
+                            handleAuthError();
+                            return;
+                        }
 
-        service.getBoardList("Bearer " + token, null, null, orderBy, 0, 20)
-                .enqueue(new Callback<List<BoardListItemDTO>>() {
-                    @Override public void onResponse(Call<List<BoardListItemDTO>> call, Response<List<BoardListItemDTO>> response) {
-                        if (response.code() == 401 || response.code() == 403) { handleAuthError(); return; }
-                        if (response.code() == 204) { adapter.submitList(new ArrayList<>()); showList(); return; }
+                        boolean isSearching = currentKeyword != null && !currentKeyword.isEmpty();
+
+                        if (response.code() == 204) {
+                            adapter.submitList(new ArrayList<>());
+                            if (isSearching) {
+                                showEmpty();
+                            } else {
+                                showList();
+                            }
+                            return;
+                        }
+
                         if (response.isSuccessful() && response.body() != null) {
-                            List<BoardItem> uiList = BoardMappers.toBoardItems(response.body());
+                            List<BoardListItemDTO> body = response.body();
+
+                            if (body.isEmpty()) {
+                                adapter.submitList(new ArrayList<>());
+                                if (isSearching) {
+                                    showEmpty();
+                                } else {
+                                    showList();
+                                }
+                                return;
+                            }
+                            List<BoardItem> uiList = BoardMappers.toBoardItems(body);
                             adapter.submitList(uiList);
                             showList();
                         } else {
-                            Log.e("BoardActivity", "list fail: " + response.code());
+                            adapter.submitList(new ArrayList<>());
+                            if (isSearching) {
+                                showEmpty();
+                            } else {
+                                showList();
+                            }
                         }
                     }
-                    @Override public void onFailure(Call<List<BoardListItemDTO>> call, Throwable t) { }
+
+                    @Override
+                    public void onFailure(Call<List<BoardListItemDTO>> call, Throwable t) {
+                        boolean isSearching = currentKeyword != null && !currentKeyword.isEmpty();
+                        adapter.submitList(new ArrayList<>());
+                        if (isSearching) {
+                            showEmpty();
+                        } else {
+                            showList();
+                        }
+                    }
                 });
+
     }
+
+    private String getCurrentOrderBy() {
+        return binding.tabNewest.isSelected() ? "recent" : "like";
+    }
+
 
     private void performSearch(String keyword) {
-        Retrofit retrofit = RetrofitInstance.getRetrofitInstance();
-        BoardService service = retrofit.create(BoardService.class);
-
-        SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
-        String token = prefs.getString(KEY_AT, null);
-        if (token == null || token.isEmpty()) { handleAuthError(); return; }
-
-        service.getBoardList("Bearer " + token, keyword, null, "recent", 0, 20)
-                .enqueue(new Callback<List<BoardListItemDTO>>() {
-                    @Override public void onResponse(Call<List<BoardListItemDTO>> call, Response<List<BoardListItemDTO>> response) {
-                        if (response.code() == 401 || response.code() == 403) { handleAuthError(); return; }
-                        if (response.isSuccessful() && response.body() != null) {
-                            List<BoardItem> uiList = BoardMappers.toBoardItems(response.body());
-                            if (uiList.isEmpty()) { showEmpty(); } else { adapter.submitList(uiList); showList(); }
-                        } else { showEmpty(); }
-                    }
-                    @Override public void onFailure(Call<List<BoardListItemDTO>> call, Throwable t) { showEmpty(); }
-                });
+        String trimmed = keyword == null ? "" : keyword.trim();
+        if (trimmed.isEmpty()) {
+            clearSearchAndReload();
+            return;
+        }
+        currentKeyword = trimmed;
+        loadBoardListFromApi(getCurrentOrderBy());
     }
+
 
     private void showEmpty() {
         binding.viewEmpty.getRoot().setVisibility(View.VISIBLE);
