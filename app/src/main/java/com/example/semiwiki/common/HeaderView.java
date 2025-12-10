@@ -130,8 +130,7 @@ public class HeaderView extends FrameLayout {
             ivClear = searchBar.findViewById(R.id.iv_clear);
             ivSearchInBar = searchBar.findViewById(R.id.iv_searchbar_icon);
 
-            ConstraintLayout.LayoutParams lp =
-                    new ConstraintLayout.LayoutParams(
+            ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(
                             ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
                             ConstraintLayout.LayoutParams.WRAP_CONTENT
                     );
